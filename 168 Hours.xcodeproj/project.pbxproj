@@ -1,0 +1,450 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1D3623260D0F684500981E51 /* TimeTrackerAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* TimeTrackerAppDelegate.m */; };
+		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
+		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
+		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
+		28193060112F816700ECF9B4 /* 168hours.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2819305F112F816700ECF9B4 /* 168hours.xcdatamodeld */; };
+		288765A50DF7441C002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765A40DF7441C002DB57D /* CoreGraphics.framework */; };
+		28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28AD733E0D9D9553002E5188 /* MainWindow.xib */; };
+		28D801B40F44B63D00FB423F /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28D801B30F44B63D00FB423F /* CoreData.framework */; };
+		9E0326C612EFF1A600F54F51 /* ActivityCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9E0326C512EFF1A600F54F51 /* ActivityCell.xib */; };
+		9E10850F1314711F00485D1B /* renameButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E10850E1314711F00485D1B /* renameButton.png */; };
+		9E13F6A912F5070000636424 /* ActivityDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E13F6A712F5070000636424 /* ActivityDetailViewController.m */; };
+		9E13F6AA12F5070000636424 /* ActivityDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9E13F6A812F5070000636424 /* ActivityDetailViewController.xib */; };
+		9E1509261320526700DFA2B9 /* EntryDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E1509241320526700DFA2B9 /* EntryDetailView.m */; };
+		9E1509271320526700DFA2B9 /* EntryDetailView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9E1509251320526700DFA2B9 /* EntryDetailView.xib */; };
+		9E1509291320534500DFA2B9 /* EntryDetailViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9E1509281320534500DFA2B9 /* EntryDetailViewCell.xib */; };
+		9E2FAC1412D68D45000CC48F /* ActivityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2FAC1212D68D45000CC48F /* ActivityViewController.m */; };
+		9E2FAC1512D68D45000CC48F /* ActivityViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9E2FAC1312D68D45000CC48F /* ActivityViewController.xib */; };
+		9E2FAC4212D68DFB000CC48F /* AddActivityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2FAC4012D68DFB000CC48F /* AddActivityViewController.m */; };
+		9E2FAC4312D68DFB000CC48F /* AddActivityViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9E2FAC4112D68DFB000CC48F /* AddActivityViewController.xib */; };
+		9E3988AE12F21286006915AA /* Entry.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E3988A912F21286006915AA /* Entry.m */; };
+		9E3988AF12F21286006915AA /* Activity.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E3988AB12F21286006915AA /* Activity.m */; };
+		9E3988B012F21286006915AA /* General.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E3988AD12F21286006915AA /* General.m */; };
+		9E3A866512FB68C700893675 /* RenameActivityView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E3A866312FB68C700893675 /* RenameActivityView.m */; };
+		9E3A866612FB68C700893675 /* RenameActivityView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9E3A866412FB68C700893675 /* RenameActivityView.xib */; };
+		9E62AECE12F87146002E06E9 /* ActivityDetailViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9E62AECD12F87146002E06E9 /* ActivityDetailViewCell.xib */; };
+		9E9DBEF4130F899200486819 /* uipicker_cover.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E9DBEF3130F899200486819 /* uipicker_cover.png */; };
+		9ECBF1BC12FBB2EB00D32892 /* ChangeActivityTimeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ECBF1BA12FBB2EB00D32892 /* ChangeActivityTimeView.m */; };
+		9ECBF1BD12FBB2EB00D32892 /* ChangeActivityTimeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9ECBF1BB12FBB2EB00D32892 /* ChangeActivityTimeView.xib */; };
+		9EE2CB781357544400361574 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EE2CB771357544400361574 /* MessageUI.framework */; };
+		9EF1090D132DBF130082CFD3 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 9EF1090C132DBF130082CFD3 /* icon.png */; };
+		9EF1090F132DBF260082CFD3 /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9EF1090E132DBF260082CFD3 /* icon@2x.png */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		1D3623240D0F684500981E51 /* TimeTrackerAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimeTrackerAppDelegate.h; sourceTree = "<group>"; };
+		1D3623250D0F684500981E51 /* TimeTrackerAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimeTrackerAppDelegate.m; sourceTree = "<group>"; };
+		1D6058910D05DD3D006BFB54 /* 168 Hours.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "168 Hours.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		288765A40DF7441C002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		28AD733E0D9D9553002E5188 /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
+		28C3AD890F43EF2300507BA6 /* TimeTracker.xcdatamodel */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.xcdatamodel; path = TimeTracker.xcdatamodel; sourceTree = "<group>"; };
+		28D801B30F44B63D00FB423F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		32CA4F630368D1EE00C91783 /* 168hours_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = 168hours_Prefix.pch; sourceTree = "<group>"; };
+		8D1107310486CEB800E47090 /* 168hours-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "168hours-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
+		9E0326C512EFF1A600F54F51 /* ActivityCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ActivityCell.xib; sourceTree = "<group>"; };
+		9E10850E1314711F00485D1B /* renameButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = renameButton.png; sourceTree = "<group>"; };
+		9E13F6A612F5070000636424 /* ActivityDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActivityDetailViewController.h; sourceTree = "<group>"; };
+		9E13F6A712F5070000636424 /* ActivityDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActivityDetailViewController.m; sourceTree = "<group>"; };
+		9E13F6A812F5070000636424 /* ActivityDetailViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ActivityDetailViewController.xib; sourceTree = "<group>"; };
+		9E1509231320526700DFA2B9 /* EntryDetailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EntryDetailView.h; sourceTree = "<group>"; };
+		9E1509241320526700DFA2B9 /* EntryDetailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EntryDetailView.m; sourceTree = "<group>"; };
+		9E1509251320526700DFA2B9 /* EntryDetailView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EntryDetailView.xib; sourceTree = "<group>"; };
+		9E1509281320534500DFA2B9 /* EntryDetailViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EntryDetailViewCell.xib; sourceTree = "<group>"; };
+		9E2FAC1112D68D45000CC48F /* ActivityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActivityViewController.h; sourceTree = "<group>"; };
+		9E2FAC1212D68D45000CC48F /* ActivityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActivityViewController.m; sourceTree = "<group>"; };
+		9E2FAC1312D68D45000CC48F /* ActivityViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ActivityViewController.xib; sourceTree = "<group>"; };
+		9E2FAC3F12D68DFB000CC48F /* AddActivityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddActivityViewController.h; sourceTree = "<group>"; };
+		9E2FAC4012D68DFB000CC48F /* AddActivityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddActivityViewController.m; sourceTree = "<group>"; };
+		9E2FAC4112D68DFB000CC48F /* AddActivityViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddActivityViewController.xib; sourceTree = "<group>"; };
+		9E39888E12F20F64006915AA /* TimeTracker 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "TimeTracker 3.xcdatamodel"; sourceTree = "<group>"; };
+		9E3988A812F21286006915AA /* Entry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Entry.h; sourceTree = "<group>"; };
+		9E3988A912F21286006915AA /* Entry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Entry.m; sourceTree = "<group>"; };
+		9E3988AA12F21286006915AA /* Activity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Activity.h; sourceTree = "<group>"; };
+		9E3988AB12F21286006915AA /* Activity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Activity.m; sourceTree = "<group>"; };
+		9E3988AC12F21286006915AA /* General.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = General.h; sourceTree = "<group>"; };
+		9E3988AD12F21286006915AA /* General.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = General.m; sourceTree = "<group>"; };
+		9E3988F012F21EAA006915AA /* TimeTracker 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "TimeTracker 4.xcdatamodel"; sourceTree = "<group>"; };
+		9E3A866212FB68C700893675 /* RenameActivityView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenameActivityView.h; sourceTree = "<group>"; };
+		9E3A866312FB68C700893675 /* RenameActivityView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RenameActivityView.m; sourceTree = "<group>"; };
+		9E3A866412FB68C700893675 /* RenameActivityView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RenameActivityView.xib; sourceTree = "<group>"; };
+		9E62AECD12F87146002E06E9 /* ActivityDetailViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ActivityDetailViewCell.xib; sourceTree = "<group>"; };
+		9E63473312E6227600B11F00 /* TimeTracker 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "TimeTracker 2.xcdatamodel"; sourceTree = "<group>"; };
+		9E94E7791311C49B00867D07 /* 168hours 5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "168hours 5.xcdatamodel"; sourceTree = "<group>"; };
+		9E9DBEF3130F899200486819 /* uipicker_cover.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = uipicker_cover.png; sourceTree = "<group>"; };
+		9ECBF1B912FBB2EB00D32892 /* ChangeActivityTimeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangeActivityTimeView.h; sourceTree = "<group>"; };
+		9ECBF1BA12FBB2EB00D32892 /* ChangeActivityTimeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChangeActivityTimeView.m; sourceTree = "<group>"; };
+		9ECBF1BB12FBB2EB00D32892 /* ChangeActivityTimeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChangeActivityTimeView.xib; sourceTree = "<group>"; };
+		9EE2CB771357544400361574 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		9EF1090C132DBF130082CFD3 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
+		9EF1090E132DBF260082CFD3 /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1D60588F0D05DD3D006BFB54 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9EE2CB781357544400361574 /* MessageUI.framework in Frameworks */,
+				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
+				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
+				288765A50DF7441C002DB57D /* CoreGraphics.framework in Frameworks */,
+				28D801B40F44B63D00FB423F /* CoreData.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		080E96DDFE201D6D7F000001 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				1D3623240D0F684500981E51 /* TimeTrackerAppDelegate.h */,
+				1D3623250D0F684500981E51 /* TimeTrackerAppDelegate.m */,
+				9E2FAC1712D68D51000CC48F /* MainActivityView */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		19C28FACFE9D520D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1D6058910D05DD3D006BFB54 /* 168 Hours.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
+			isa = PBXGroup;
+			children = (
+				080E96DDFE201D6D7F000001 /* Classes */,
+				29B97315FDCFA39411CA2CEA /* Other Sources */,
+				29B97317FDCFA39411CA2CEA /* Resources */,
+				29B97323FDCFA39411CA2CEA /* Frameworks */,
+				19C28FACFE9D520D11CA2CBB /* Products */,
+			);
+			name = CustomTemplate;
+			sourceTree = "<group>";
+		};
+		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				32CA4F630368D1EE00C91783 /* 168hours_Prefix.pch */,
+				29B97316FDCFA39411CA2CEA /* main.m */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		29B97317FDCFA39411CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				9E9DBEF3130F899200486819 /* uipicker_cover.png */,
+				9EF1090C132DBF130082CFD3 /* icon.png */,
+				9EF1090E132DBF260082CFD3 /* icon@2x.png */,
+				9E10850E1314711F00485D1B /* renameButton.png */,
+				2819305F112F816700ECF9B4 /* 168hours.xcdatamodeld */,
+				28AD733E0D9D9553002E5188 /* MainWindow.xib */,
+				8D1107310486CEB800E47090 /* 168hours-Info.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9EE2CB771357544400361574 /* MessageUI.framework */,
+				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
+				1D30AB110D05D00D00671497 /* Foundation.framework */,
+				288765A40DF7441C002DB57D /* CoreGraphics.framework */,
+				28D801B30F44B63D00FB423F /* CoreData.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		9E13F6AC12F5070900636424 /* ActivityDetailView */ = {
+			isa = PBXGroup;
+			children = (
+				9E13F6A612F5070000636424 /* ActivityDetailViewController.h */,
+				9E13F6A712F5070000636424 /* ActivityDetailViewController.m */,
+				9E13F6A812F5070000636424 /* ActivityDetailViewController.xib */,
+				9E62AECD12F87146002E06E9 /* ActivityDetailViewCell.xib */,
+				9E3A866812FB68D300893675 /* RenameActivityView */,
+				9E150922132051F700DFA2B9 /* EntryDetailView */,
+				9ECBF1BF12FBB2F400D32892 /* ChangeActivityTimeView */,
+			);
+			name = ActivityDetailView;
+			sourceTree = "<group>";
+		};
+		9E150922132051F700DFA2B9 /* EntryDetailView */ = {
+			isa = PBXGroup;
+			children = (
+				9E1509231320526700DFA2B9 /* EntryDetailView.h */,
+				9E1509241320526700DFA2B9 /* EntryDetailView.m */,
+				9E1509251320526700DFA2B9 /* EntryDetailView.xib */,
+				9E1509281320534500DFA2B9 /* EntryDetailViewCell.xib */,
+			);
+			name = EntryDetailView;
+			sourceTree = "<group>";
+		};
+		9E2FAC1712D68D51000CC48F /* MainActivityView */ = {
+			isa = PBXGroup;
+			children = (
+				9E2FAC1112D68D45000CC48F /* ActivityViewController.h */,
+				9E2FAC1212D68D45000CC48F /* ActivityViewController.m */,
+				9E2FAC1312D68D45000CC48F /* ActivityViewController.xib */,
+				9E0326C512EFF1A600F54F51 /* ActivityCell.xib */,
+				9E2FAC3C12D68DDF000CC48F /* AddActivityView */,
+				9E13F6AC12F5070900636424 /* ActivityDetailView */,
+			);
+			name = MainActivityView;
+			sourceTree = "<group>";
+		};
+		9E2FAC3C12D68DDF000CC48F /* AddActivityView */ = {
+			isa = PBXGroup;
+			children = (
+				9E2FAC3F12D68DFB000CC48F /* AddActivityViewController.h */,
+				9E2FAC4012D68DFB000CC48F /* AddActivityViewController.m */,
+				9E2FAC4112D68DFB000CC48F /* AddActivityViewController.xib */,
+			);
+			name = AddActivityView;
+			sourceTree = "<group>";
+		};
+		9E3A866812FB68D300893675 /* RenameActivityView */ = {
+			isa = PBXGroup;
+			children = (
+				9E3A866212FB68C700893675 /* RenameActivityView.h */,
+				9E3A866312FB68C700893675 /* RenameActivityView.m */,
+				9E3A866412FB68C700893675 /* RenameActivityView.xib */,
+			);
+			name = RenameActivityView;
+			sourceTree = "<group>";
+		};
+		9ECBF1BF12FBB2F400D32892 /* ChangeActivityTimeView */ = {
+			isa = PBXGroup;
+			children = (
+				9ECBF1B912FBB2EB00D32892 /* ChangeActivityTimeView.h */,
+				9ECBF1BA12FBB2EB00D32892 /* ChangeActivityTimeView.m */,
+				9ECBF1BB12FBB2EB00D32892 /* ChangeActivityTimeView.xib */,
+			);
+			name = ChangeActivityTimeView;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1D6058900D05DD3D006BFB54 /* 168 Hours */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "168 Hours" */;
+			buildPhases = (
+				1D60588D0D05DD3D006BFB54 /* Resources */,
+				1D60588E0D05DD3D006BFB54 /* Sources */,
+				1D60588F0D05DD3D006BFB54 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "168 Hours";
+			productName = TimeTracker;
+			productReference = 1D6058910D05DD3D006BFB54 /* 168 Hours.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		29B97313FDCFA39411CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "168 Hours" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1D6058900D05DD3D006BFB54 /* 168 Hours */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1D60588D0D05DD3D006BFB54 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */,
+				9E2FAC1512D68D45000CC48F /* ActivityViewController.xib in Resources */,
+				9E2FAC4312D68DFB000CC48F /* AddActivityViewController.xib in Resources */,
+				9E0326C612EFF1A600F54F51 /* ActivityCell.xib in Resources */,
+				9E13F6AA12F5070000636424 /* ActivityDetailViewController.xib in Resources */,
+				9E62AECE12F87146002E06E9 /* ActivityDetailViewCell.xib in Resources */,
+				9E3A866612FB68C700893675 /* RenameActivityView.xib in Resources */,
+				9ECBF1BD12FBB2EB00D32892 /* ChangeActivityTimeView.xib in Resources */,
+				9E9DBEF4130F899200486819 /* uipicker_cover.png in Resources */,
+				9E10850F1314711F00485D1B /* renameButton.png in Resources */,
+				9E1509271320526700DFA2B9 /* EntryDetailView.xib in Resources */,
+				9E1509291320534500DFA2B9 /* EntryDetailViewCell.xib in Resources */,
+				9EF1090D132DBF130082CFD3 /* icon.png in Resources */,
+				9EF1090F132DBF260082CFD3 /* icon@2x.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1D60588E0D05DD3D006BFB54 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
+				1D3623260D0F684500981E51 /* TimeTrackerAppDelegate.m in Sources */,
+				28193060112F816700ECF9B4 /* 168hours.xcdatamodeld in Sources */,
+				9E2FAC1412D68D45000CC48F /* ActivityViewController.m in Sources */,
+				9E2FAC4212D68DFB000CC48F /* AddActivityViewController.m in Sources */,
+				9E3988AE12F21286006915AA /* Entry.m in Sources */,
+				9E3988AF12F21286006915AA /* Activity.m in Sources */,
+				9E3988B012F21286006915AA /* General.m in Sources */,
+				9E13F6A912F5070000636424 /* ActivityDetailViewController.m in Sources */,
+				9E3A866512FB68C700893675 /* RenameActivityView.m in Sources */,
+				9ECBF1BC12FBB2EB00D32892 /* ChangeActivityTimeView.m in Sources */,
+				9E1509261320526700DFA2B9 /* EntryDetailView.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1D6058940D05DD3E006BFB54 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Orlando O'Neill (5HCE88N8L9)";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1.0;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = 168hours_Prefix.pch;
+				INFOPLIST_FILE = "168hours-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				PRODUCT_NAME = "168 Hours";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "237B798F-A2EE-4F1C-BA6F-FBA4326B42B6";
+				SDKROOT = iphoneos;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		1D6058950D05DD3E006BFB54 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Orlando O'Neill (5HCE88N8L9)";
+				COPY_PHASE_STRIP = YES;
+				CURRENT_PROJECT_VERSION = 1.0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = 168hours_Prefix.pch;
+				INFOPLIST_FILE = "168hours-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				PRODUCT_NAME = "168 Hours";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "237B798F-A2EE-4F1C-BA6F-FBA4326B42B6";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		C01FCF4F08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.2;
+				PREBINDING = NO;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		C01FCF5008A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.2;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PREBINDING = NO;
+				SDKROOT = iphoneos;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "168 Hours" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1D6058940D05DD3E006BFB54 /* Debug */,
+				1D6058950D05DD3E006BFB54 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "168 Hours" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4F08A954540054247B /* Debug */,
+				C01FCF5008A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		2819305F112F816700ECF9B4 /* 168hours.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				28C3AD890F43EF2300507BA6 /* TimeTracker.xcdatamodel */,
+				9E63473312E6227600B11F00 /* TimeTracker 2.xcdatamodel */,
+				9E39888E12F20F64006915AA /* TimeTracker 3.xcdatamodel */,
+				9E3988F012F21EAA006915AA /* TimeTracker 4.xcdatamodel */,
+				9E94E7791311C49B00867D07 /* 168hours 5.xcdatamodel */,
+				9E3988A812F21286006915AA /* Entry.h */,
+				9E3988A912F21286006915AA /* Entry.m */,
+				9E3988AA12F21286006915AA /* Activity.h */,
+				9E3988AB12F21286006915AA /* Activity.m */,
+				9E3988AC12F21286006915AA /* General.h */,
+				9E3988AD12F21286006915AA /* General.m */,
+			);
+			currentVersion = 9E94E7791311C49B00867D07 /* 168hours 5.xcdatamodel */;
+			name = 168hours.xcdatamodeld;
+			path = TimeTracker.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
+}
