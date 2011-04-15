@@ -1,0 +1,33 @@
+This is all of the code for an iPhone app, 168 Hours, which is currently available in the app store: http://itunes.apple.com/us/app/168-hours/id426081539?mt=8#.
+
+The code is distributed under the GNU General Public License. Please refer to the COPYING file in the directory for the license itself.
+
+Happy hacking!
+
+------------------------- 
+
+APP DESCRIPTION
+
+168 Hours helps you track how you are spending your time on a daily or weekly basis across a set of activities.
+
+The app is meant for anyone that has a strong motivation to track how they use their time and can be used for personal reasons, research, work (though it may not be as ideal as other apps for work), etc.
+
+The inspiration for the app came from a lecture by Prof. Harry Kraemer at the Kellogg School of Management that covered the benefits of comparing how you are spending the 168 hours you have each week against your priorities to check for alignment. Furthermore, some articles claim that self-tracking can improve productivity, and ultimately, happiness.
+
+Activities
+Add, remove, or rearrange the activities that you are tracking
+
+Misc Activity
+The Misc activity keeps track of any time that is not assigned to a specific activity
+
+Entries
+Start or stop tracking time for an activity by tapping it. A new entry for the activity is added each time. View and modify existing entries by tapping on an activity’s detail button
+
+Modifying Entries
+Reassign specific entries to other activities to move or add time to those activities or reduce the amount of time for an individual entry as necessary
+
+Summary Information
+The time that is left in the day or week is shown at the top of the activities list. Tap on an activity’s detail button to see the cumulative time spent on that activity each day for the past 4 weeks
+
+Saving Your Information
+Four weeks of information is stored on the app at any time. To pull your information off of the device for storing or analyzing, tap on the “Save Log” button, connect your device to iTunes, and download the CSV log file from the device’s “Apps” window
