@@ -1,13 +1,10 @@
 This is the code for an iPhone app, 168 Hours, which is currently available in the app store: http://itunes.apple.com/us/app/168-hours/id426081539?mt=8
 
-The code is distributed under the GNU General Public License. Please refer to the LICENSE file in the directory for the license itself.
+The code is distributed under the Apache Software License. Please refer to the LICENSE file in the directory for the license itself.
 
 There probably won't be too many updates to it from this point on, so I'd recommend forking the repository and going from there. 
 
 Happy coding!
-
-p.s. I'm still in the process of commenting all of the files.
-
 ------------------------- 
 
 APP DESCRIPTION
