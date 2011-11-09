@@ -63,11 +63,11 @@ static ActivityViewController *sharedInstance;
 	
     // Uncomment next line to clear all items from persistent store
     // Only used in development/testing
-	//[appDelegate deleteAllObjects:@"Activity"];
+	// [appDelegate deleteAllObjects:@"Activity"];
 	
     // Delete the General DB object
     // This object holds just 1 value: activityRunning, which is 1 if there is an activity running
-    //[appDelegate deleteAllObjects:@"General"];
+     [appDelegate deleteAllObjects:@"General"];
 	
     // Get the activities from the persistent store and populate activities
     NSArray *fetchedActivities = [appDelegate allInstancesOf:@"Activity"];		
@@ -399,18 +399,37 @@ static ActivityViewController *sharedInstance;
         
         [date setDateFormat:@"MM/dd/YY"];
         NSString *entryDate = [date stringFromDate:[currentEntry startDate]];
-         
-        [date setTimeStyle:NSDateFormatterShortStyle];
-        NSString *startTime = [date stringFromDate:[currentEntry startDate]];
+        
+        // Check what the GMT offsets are for the local timezone
+        // on the entry's start and end date
+        NSDate *startDate = [currentEntry startDate];
+        NSDate *endDate = [currentEntry endDate];
+        NSInteger startDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:startDate];
+        NSInteger endDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:endDate];
+        
+        // Format and display the dates in the Entries rows
+        // Start Date Format
+        NSDateFormatter *stDate = [[[NSDateFormatter alloc] init] autorelease]; 
+        [stDate setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:startDateTimeZoneOffset]];
+        [stDate setTimeStyle:NSDateFormatterShortStyle];
+        
+        // End Date Format
+        NSDateFormatter *enDate = [[[NSDateFormatter alloc] init] autorelease]; 
+        [enDate setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:endDateTimeZoneOffset]];
+        [enDate setTimeStyle:NSDateFormatterShortStyle];
+        
+        
+        
+        NSString *startTime = [stDate stringFromDate:[currentEntry startDate]];
         
         NSString *endTime;
         if ([currentEntry endDate]) 
         {
-            endTime=[date stringFromDate:[currentEntry endDate]];
+            endTime=[enDate stringFromDate:[currentEntry endDate]];
         }
         else
         {
-            endTime=[date stringFromDate:today];
+            endTime=[enDate stringFromDate:today];
         }
         
         // Now calculate the entry time
@@ -609,8 +628,9 @@ static ActivityViewController *sharedInstance;
 	}
 	
 	// Now calculate the beginning of the past weeks 
-	NSTimeInterval secondsPerWeek = 7 * 24 * 60 * 60;
-	NSDate *beginningOfWeekFour = [beginningOfWeekOne dateByAddingTimeInterval:-3*secondsPerWeek];	
+	NSDateComponents *dateOffset = [[[NSDateComponents alloc] init] autorelease];
+    [dateOffset setDay:-21];
+    NSDate *beginningOfWeekFour = [curCalendar dateByAddingComponents:dateOffset toDate:beginningOfWeekOne options:0]; 
 	
 	for (Entry *ent in allEntries) 
 	{
@@ -647,6 +667,14 @@ static ActivityViewController *sharedInstance;
         NSDate *startOfToday = [curCalendar dateFromComponents:dateComps];
         
         NSTimeInterval timeInterval = [today timeIntervalSinceDate:startOfToday];
+        
+        // Check for GMT discrepancy from daylight savings time
+        // And fix it
+        NSInteger startDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:startOfToday];
+        NSInteger endDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:today];
+        NSTimeInterval offsetForDaylightSavings = endDateTimeZoneOffset - startDateTimeZoneOffset;
+        timeInterval = timeInterval + offsetForDaylightSavings;
+        
         timeInterval = timeInterval/(3600);
         hoursLeft = 24 - round(timeInterval);
     }
@@ -656,13 +684,21 @@ static ActivityViewController *sharedInstance;
         BOOL ok = [curCalendar rangeOfUnit:NSWeekCalendarUnit startDate:&beginningOfWeek interval:NULL forDate:today];
         if (!ok) 
         {
-            NSLog(@"Some kine of error in hoursLeftInWeek");
+            NSLog(@"Some kind of error in hoursLeftInWeek");
         }
         
         //NSLog(@"Beginning of week = %@", [beginningOfWeek description]);
         //NSLog(@"Today = %@", [today description]);
         
         NSTimeInterval timeInterval = [today timeIntervalSinceDate:beginningOfWeek];
+        
+        // Check for GMT discrepancy from daylight savings time
+        // And fix it
+        NSInteger startDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:beginningOfWeek];
+        NSInteger endDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:today];
+        NSTimeInterval offsetForDaylightSavings = endDateTimeZoneOffset - startDateTimeZoneOffset;
+        timeInterval = timeInterval + offsetForDaylightSavings;
+        
         timeInterval = timeInterval/(3600);
         hoursLeft = 168 - round(timeInterval);
         //NSLog(@"Time interval since beg week = %i", hoursLeft);
@@ -699,7 +735,7 @@ static ActivityViewController *sharedInstance;
         BOOL ok = [curCalendar rangeOfUnit:NSWeekCalendarUnit startDate:&beginningOfPeriod interval:NULL forDate:today];
         if (!ok) 
         {
-            NSLog(@"Some kine of error in timeSpentDoingActivity");
+            NSLog(@"Some kind of error in timeSpentDoingActivity");
         }
     }
     		
@@ -712,7 +748,10 @@ static ActivityViewController *sharedInstance;
 		allEntries = [allTheEntries mutableCopy];
 		entryList = [allEntries mutableCopy];
 		timeThatPassed = [today timeIntervalSinceDate:beginningOfPeriod];
-		//NSLog(@"In here for Misc");
+        NSInteger startDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:beginningOfPeriod];
+        NSInteger endDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:today];
+        NSTimeInterval offsetForDaylightSavings = endDateTimeZoneOffset - startDateTimeZoneOffset;
+        timeThatPassed = timeThatPassed + offsetForDaylightSavings;
 	}
 	else 
 	{
@@ -728,7 +767,7 @@ static ActivityViewController *sharedInstance;
 		}
 	}
 		
-		
+	NSDate *startTime, *endTime;	
 	for (Entry *ent in entryList) 
 	{
 		// Check against selected week
@@ -740,12 +779,16 @@ static ActivityViewController *sharedInstance;
 				if ([[ent startDate] compare:beginningOfPeriod] == NSOrderedDescending) 
 				{
 					entryTime = [[ent endDate] timeIntervalSinceDate:[ent startDate]];
+                    endTime = [ent endDate];
+                    startTime = [ent startDate];
 				}
 				else 
 				{
 					entryTime = [[ent endDate] timeIntervalSinceDate:beginningOfPeriod];
 					//entryTime = [beginningOfWeekOne timeIntervalSinceDate:[entry startDate]];
 					//timeIntervalWeekTwo += entryTime;
+                    endTime = [ent endDate];
+                    startTime = beginningOfPeriod;
 				}
 			}
 			else 
@@ -753,14 +796,25 @@ static ActivityViewController *sharedInstance;
 				if ([[ent startDate] compare:beginningOfPeriod] == NSOrderedDescending)
 				{	
 					entryTime = [today timeIntervalSinceDate:[ent startDate]];
+                    endTime = today;
+                    startTime = [ent startDate];
 				}
 				else 
 				{
 					entryTime = [today timeIntervalSinceDate:beginningOfPeriod];
+                    endTime = today;
+                    startTime = beginningOfPeriod;
 				}
 
 			}
 			cumulativeTime += entryTime;
+            
+            // Fix any offset issues from daylight savings time
+            // on the time spent doing an activity 
+            NSInteger startDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:startTime];
+            NSInteger endDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:endTime];
+            NSTimeInterval offsetForDaylightSavings = endDateTimeZoneOffset - startDateTimeZoneOffset;
+            cumulativeTime += offsetForDaylightSavings;
 		}
 	}
 	
@@ -881,12 +935,17 @@ static ActivityViewController *sharedInstance;
 		NSLog(@"Some kind of error in timeSpentDoingActivity");
 	}
 	NSTimeInterval timeThatPassed = [today timeIntervalSinceDate:beginningOfWeekOne];
-	
+	NSInteger startDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:beginningOfWeekOne];
+    NSInteger endDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:today];
+    NSTimeInterval offsetForDaylightSavings = endDateTimeZoneOffset - startDateTimeZoneOffset;
+    timeThatPassed = timeThatPassed + offsetForDaylightSavings;
+    
 	// Now calculate the beginning of the past weeks 
-	NSTimeInterval secondsPerWeek = 7 * 24 * 60 * 60;
-	NSDate *beginningOfWeekTwo = [beginningOfWeekOne dateByAddingTimeInterval:-secondsPerWeek];
-	NSDate *beginningOfWeekThree = [beginningOfWeekTwo dateByAddingTimeInterval:-secondsPerWeek];
-	NSDate *beginningOfWeekFour = [beginningOfWeekThree dateByAddingTimeInterval:-secondsPerWeek];
+    NSDateComponents *dateOffset = [[[NSDateComponents alloc] init] autorelease];
+    [dateOffset setDay:-7];
+    NSDate *beginningOfWeekTwo = [curCalendar dateByAddingComponents:dateOffset toDate:beginningOfWeekOne options:0];
+    NSDate *beginningOfWeekThree = [curCalendar dateByAddingComponents:dateOffset toDate:beginningOfWeekTwo options:0];
+    NSDate *beginningOfWeekFour = [curCalendar dateByAddingComponents:dateOffset toDate:beginningOfWeekThree options:0]; 
 	
     if ([activityName isEqualToString:@"Misc"]) 
     {
@@ -897,6 +956,7 @@ static ActivityViewController *sharedInstance;
         entryList = [entries objectForKey:activityName];
     }
     
+    NSDate *startTime, *endTime;
 	// Now go through every entry and figure out where it goes
 	for (Entry *entry in entryList) 
 	{
@@ -909,12 +969,16 @@ static ActivityViewController *sharedInstance;
 				if ([[entry startDate] compare:beginningOfWeekOne] == NSOrderedDescending) 
 				{
 					entryTime = [[entry endDate] timeIntervalSinceDate:[entry startDate]];
+                    endTime = [entry endDate];
+                    startTime = [entry startDate];
 				}
 				else 
 				{
 					entryTime = [[entry endDate] timeIntervalSinceDate:beginningOfWeekOne];
 					//entryTime = [beginningOfWeekOne timeIntervalSinceDate:[entry startDate]];
 					//timeIntervalWeekTwo += entryTime;
+                    endTime = [entry endDate];
+                    startTime = beginningOfWeekOne;
 				}
 			}
 			else 
@@ -922,13 +986,25 @@ static ActivityViewController *sharedInstance;
 				if ([[entry startDate] compare:beginningOfWeekOne] == NSOrderedDescending)
 				{
 					entryTime = [today timeIntervalSinceDate:[entry startDate]];
+                    endTime = today;
+                    startTime = [entry startDate];
 				}
 				else 
 				{
 					entryTime = [today timeIntervalSinceDate:beginningOfWeekOne];
+                    endTime = today;
+                    startTime = beginningOfWeekOne;
 				}
 			}
 			timeIntervalWeekOne += entryTime;
+            
+            // Fix any offset issues from daylight savings time
+            // on the time spent doing an activity
+            NSInteger startDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:startTime];
+            NSInteger endDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:endTime];
+            NSTimeInterval offsetForDaylightSavings = endDateTimeZoneOffset - startDateTimeZoneOffset;
+            
+            timeIntervalWeekOne += offsetForDaylightSavings;
 		}
         
         
@@ -942,10 +1018,14 @@ static ActivityViewController *sharedInstance;
 					if ([[entry endDate] compare:beginningOfWeekOne] == NSOrderedDescending) 
 					{
 						entryTime = [beginningOfWeekOne timeIntervalSinceDate:[entry startDate]];
+                        endTime = beginningOfWeekOne;
+                        startTime = [entry startDate];
 					}
 					else 
 					{
 						entryTime = [[entry endDate] timeIntervalSinceDate:[entry startDate]];
+                        endTime = [entry endDate];
+                        startTime = [entry startDate];
 					}
 				}
 				else 
@@ -953,13 +1033,25 @@ static ActivityViewController *sharedInstance;
 					entryTime = [[entry endDate] timeIntervalSinceDate:beginningOfWeekTwo];
 					//entryTime = [beginningOfWeekOne timeIntervalSinceDate:[entry startDate]];
 					//timeIntervalWeekTwo += entryTime;
+                    endTime = [entry endDate];
+                    startTime = beginningOfWeekTwo;
 				}
 			}
 			else 
 			{
 				entryTime = [beginningOfWeekOne timeIntervalSinceDate:[entry startDate]];
+                endTime = beginningOfWeekOne;
+                startTime = [entry startDate];
 			}
 			timeIntervalWeekTwo += entryTime;
+            
+            // Fix any offset issues from daylight savings time
+            // on the time spent doing an activity
+            NSInteger startDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:startTime];
+            NSInteger endDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:endTime];
+            NSTimeInterval offsetForDaylightSavings = endDateTimeZoneOffset - startDateTimeZoneOffset;
+            
+            timeIntervalWeekTwo += offsetForDaylightSavings;
 		}
 		
 		// Check week 3
@@ -970,19 +1062,33 @@ static ActivityViewController *sharedInstance;
 				if ([[entry startDate] compare:beginningOfWeekThree] == NSOrderedDescending) 
 				{
 					entryTime = [[entry endDate] timeIntervalSinceDate:[entry startDate]];
+                    endTime = [entry endDate];
+                    startTime = [entry startDate];
 				}
 				else 
 				{
 					entryTime = [[entry endDate] timeIntervalSinceDate:beginningOfWeekThree];
 					//entryTime = [beginningOfWeekOne timeIntervalSinceDate:[entry startDate]];
 					//timeIntervalWeekTwo += entryTime;
+                    endTime = [entry endDate];
+                    startTime = beginningOfWeekThree;
 				}
 			}
 			else 
 			{
 				entryTime = [beginningOfWeekTwo timeIntervalSinceDate:[entry startDate]];
+                endTime = beginningOfWeekTwo;
+                startTime = [entry startDate];
 			}
 			timeIntervalWeekThree += entryTime;
+            
+            // Fix any offset issues from daylight savings time
+            // on the time spent doing an activity
+            NSInteger startDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:startTime];
+            NSInteger endDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:endTime];
+            NSTimeInterval offsetForDaylightSavings = endDateTimeZoneOffset - startDateTimeZoneOffset;
+            
+            timeIntervalWeekThree += offsetForDaylightSavings;
 		}
         
 		// Check week 4
@@ -993,19 +1099,32 @@ static ActivityViewController *sharedInstance;
 				if ([[entry startDate] compare:beginningOfWeekFour] == NSOrderedDescending) 
 				{
 					entryTime = [[entry endDate] timeIntervalSinceDate:[entry startDate]];
+                    endTime = [entry endDate];
+                    startTime = [entry startDate];
 				}
 				else 
 				{
 					entryTime = [[entry endDate] timeIntervalSinceDate:beginningOfWeekFour];
 					//entryTime = [beginningOfWeekOne timeIntervalSinceDate:[entry startDate]];
 					//timeIntervalWeekTwo += entryTime;
+                    endTime = [entry endDate];
+                    startTime = beginningOfWeekFour;
 				}
 			}
 			else 
 			{
 				entryTime = [beginningOfWeekThree timeIntervalSinceDate:[entry startDate]];
+                endTime = beginningOfWeekThree;
+                startTime = [entry startDate];
 			}
 			timeIntervalWeekFour += entryTime;
+            // Fix any offset issues from daylight savings time
+            // on the time spent doing an activity
+            NSInteger startDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:startTime];
+            NSInteger endDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:endTime];
+            NSTimeInterval offsetForDaylightSavings = endDateTimeZoneOffset - startDateTimeZoneOffset;
+            
+            timeIntervalWeekFour += offsetForDaylightSavings;
 		}
         
 	}
@@ -1102,16 +1221,21 @@ static ActivityViewController *sharedInstance;
    
     
     // Now calculate the beginning of the past weeks 
-    NSTimeInterval secondsInADay = 24 * 60 * 60;
     NSString *weekRange;
     NSDate *topDate, *bottomDate;
     NSDateFormatter *date = [[[NSDateFormatter alloc] init] autorelease]; 
 	[date setDateFormat:@"MM/dd/yy"];
+    
+    int daysInWeek = 7;
 	
     // Week 1 Range
-    topDate = [beginningOfWeekOne dateByAddingTimeInterval:secondsPerWeek];
+    //topDate = [beginningOfWeekOne dateByAddingTimeInterval:secondsPerWeek];
+    [dateOffset setDay:daysInWeek];
+    topDate = [curCalendar dateByAddingComponents:dateOffset toDate:beginningOfWeekOne options:0];
     bottomDate = beginningOfWeekOne;
-    topDate = [topDate dateByAddingTimeInterval:-secondsInADay];
+    [dateOffset setDay:-1];
+    topDate = [curCalendar dateByAddingComponents:dateOffset toDate:topDate options:0];
+ 
     NSString *stringDateTop = [date stringFromDate:topDate];
     NSString *stringDateBottom = [date stringFromDate:bottomDate];
     weekRange = [NSString stringWithFormat:@"%@ - %@",stringDateBottom,stringDateTop];
@@ -1120,9 +1244,15 @@ static ActivityViewController *sharedInstance;
 	// Weeks 2-4 Range
     for (int i = 2; i < 5; i++) 
     {
-        topDate = [beginningOfWeekOne dateByAddingTimeInterval:-(i - 2)*secondsPerWeek];
-		bottomDate = [beginningOfWeekOne dateByAddingTimeInterval:-(i - 1)*secondsPerWeek];
-        topDate = [topDate dateByAddingTimeInterval:-secondsInADay];
+        [dateOffset setDay:-daysInWeek*(i - 2)];
+        //topDate = [beginningOfWeekOne dateByAddingTimeInterval:-(i - 2)*secondsPerWeek];
+		topDate = [curCalendar dateByAddingComponents:dateOffset toDate:beginningOfWeekOne options:0];
+        
+        [dateOffset setDay:-daysInWeek*(i - 1)];
+        bottomDate = [curCalendar dateByAddingComponents:dateOffset toDate:beginningOfWeekOne options:0];
+        //bottomDate = [beginningOfWeekOne dateByAddingTimeInterval:-(i - 1)*secondsPerWeek];
+        [dateOffset setDay:-1];
+        topDate = [curCalendar dateByAddingComponents:dateOffset toDate:topDate options:0];
         stringDateTop = [date stringFromDate:topDate];
         stringDateBottom = [date stringFromDate:bottomDate];
         weekRange = [NSString stringWithFormat:@"%@ - %@",stringDateBottom,stringDateTop];

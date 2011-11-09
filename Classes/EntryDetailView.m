@@ -123,7 +123,6 @@
             NSDate *newEndDate = [NSDate dateWithTimeInterval:newEntryTime sinceDate:[selectedEntry startDate]];
 			[selectedEntry setEndDate:newEndDate];
             
-			//NSLog(@"New end date = %@",newEndDate);
 			// Save the change to the persistent store
 			[appDelegate saveContext];
 			
@@ -292,19 +291,28 @@
     NSDate *startOfToday = [curCalendar dateFromComponents:dateComps];
 	
 	// Now calculate the beginning of the past weeks 
-	NSTimeInterval secondsPerDay = 24 * 60 * 60;
-    NSDate *topDay = [selectedDay dateByAddingTimeInterval:secondsPerDay];
-	
+    //NSDate *topDay = [selectedDay dateByAddingTimeInterval:secondsPerDay];
+	NSDateComponents *dateOffset = [[[NSDateComponents alloc] init] autorelease];
+    [dateOffset setDay:1];
+    NSDate *topDay = [curCalendar dateByAddingComponents:dateOffset toDate:selectedDay options:0];
+    dateComps = [curCalendar components:unitFlags fromDate:topDay];
+    [dateComps setHour:0];
+    [dateComps setMinute:0];
+    [dateComps setSecond:0];
+    topDay = [curCalendar dateFromComponents:dateComps];
+    
+    
 	// Orlando
     // Change this to use the day as the top and bottom day
     //topDate = [beginningOfWeekOne dateByAddingTimeInterval:-(selectedWeek - 2)*secondsPerWeek];
     //bottomDate = [beginningOfWeekOne dateByAddingTimeInterval:-(selectedWeek - 1)*secondsPerWeek];
     
+    NSDate *startDate, *endDate;
 	// Check against selected week
 	//if ([topDate compare:[entry startDate]] == NSOrderedDescending && ([[entry startDate] compare:bottomDate] == NSOrderedDescending || [[entry endDate] compare:bottomDate] == NSOrderedDescending) || (![entry endDate] && selectedWeek == 1))
     if ([topDay compare:[entry startDate]] == NSOrderedDescending && ([[entry startDate] compare:selectedDay] == NSOrderedDescending || [[entry endDate] compare:selectedDay] == NSOrderedDescending) || (![entry endDate] && [selectedDay compare:startOfToday] == NSOrderedSame))
-	{
-		if ([entry endDate]) 
+	{        
+        if ([entry endDate]) 
 		{
 			if ([[entry startDate] compare:selectedDay] == NSOrderedDescending) 
 			{
@@ -312,15 +320,21 @@
 				if ([[entry endDate] compare:topDay] == NSOrderedDescending) 
 				{
 					entryTime = [topDay timeIntervalSinceDate:[entry startDate]];
+                    endDate = topDay;
+                    startDate = [entry startDate];
 				}
 				else 
 				{
 					entryTime = [[entry endDate] timeIntervalSinceDate:[entry startDate]];
+                    endDate = [entry endDate];
+                    startDate = [entry startDate];
 				}
 			}
 			else 
 			{
 				entryTime = [[entry endDate] timeIntervalSinceDate:selectedDay];
+                endDate = [entry endDate];
+                startDate = selectedDay;
 			}
 		}
 		else 
@@ -328,15 +342,25 @@
 			if ([[entry startDate] compare:selectedDay] == NSOrderedDescending)
 			{
 				entryTime = [today timeIntervalSinceDate:[entry startDate]];
+                endDate = today;
+                startDate = [entry startDate];
 			}
 			else 
 			{
 				entryTime = [today timeIntervalSinceDate:selectedDay];
+                endDate = today;
+                startDate = selectedDay;
 			}
             
 		}
 	}
 	
+    // Subtract or add 1 hour to total time based on daylight savings times changes
+    NSInteger startDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:startDate];
+    NSInteger endDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:endDate];
+    NSTimeInterval offsetForDaylightSavings = endDateTimeZoneOffset - startDateTimeZoneOffset;
+    entryTime = entryTime + offsetForDaylightSavings;
+    
 	NSNumber *hours = [NSNumber numberWithInt:(int)(entryTime/(3600))];
 	int min = (entryTime - ([hours intValue] * 3600))/60;
 	NSNumber *minutes = [NSNumber numberWithInt:min];
@@ -357,8 +381,15 @@
     [dateComps setMinute:0];
     [dateComps setSecond:0];
     NSDate *startOfToday = [curCalendar dateFromComponents:dateComps];
-    
 	NSTimeInterval timeThatPassed = [today timeIntervalSinceDate:selectedDay];
+    
+    // Fix any offset issues from daylight savings time
+    // on the time spent doing an activity
+    NSInteger startDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:selectedDay];
+    NSInteger endDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:today];
+    NSTimeInterval offsetForDaylightSavings = endDateTimeZoneOffset - startDateTimeZoneOffset;
+    timeThatPassed = timeThatPassed + offsetForDaylightSavings;
+    
     NSTimeInterval secondsInADay = 24*60*60;
 	
 	// Now go through every entry and figure out if it goes in this day
@@ -376,7 +407,16 @@
             entryEnds = [entry endDate];
         
 		// Check if today
-        topDay = [selectedDay dateByAddingTimeInterval:secondsInADay];
+        NSDateComponents *dateOffset = [[[NSDateComponents alloc] init] autorelease];
+        [dateOffset setDay:1];
+        topDay = [curCalendar dateByAddingComponents:dateOffset toDate:selectedDay options:0];
+        NSCalendar *curCalendar = [NSCalendar currentCalendar];
+        unsigned unitFlags = NSYearCalendarUnit | NSMonthCalendarUnit |  NSDayCalendarUnit | NSWeekdayCalendarUnit;
+        NSDateComponents *dateComps = [curCalendar components:unitFlags fromDate:topDay];
+        [dateComps setHour:0];
+        [dateComps setMinute:0];
+        [dateComps setSecond:0];
+        topDay = [curCalendar dateFromComponents:dateComps];
         
         if ([topDay compare:[entry startDate] ] == NSOrderedDescending && [selectedDay compare:entryEnds] != NSOrderedDescending) 
         {
@@ -392,6 +432,13 @@
             
             // Add the time for this entry to the running total for today
             timeIntervalToday += [endTime timeIntervalSinceDate:startTime];
+            
+            // Fix any offset issues from daylight savings time
+            // on the time spent doing an activity
+            NSInteger startDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:startTime];
+            NSInteger endDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:endTime];
+            NSTimeInterval offsetForDaylightSavings = endDateTimeZoneOffset - startDateTimeZoneOffset;
+            timeIntervalToday = timeIntervalToday + offsetForDaylightSavings;
         }
     }
 	
@@ -443,13 +490,21 @@
 	NSDate *today = [[NSDate alloc] init]; 
 	
 	// Now calculate the beginning of the past weeks 
-	NSTimeInterval secondsPerDay = 24 * 60 * 60;
-    NSDate *topDay = [selectedDay dateByAddingTimeInterval:secondsPerDay];
+
+    NSCalendar *curCalendar = [NSCalendar currentCalendar];
+    NSDateComponents *dateOffset = [[[NSDateComponents alloc] init] autorelease];
+    [dateOffset setDay:1];
+    NSDate *topDay = [curCalendar dateByAddingComponents:dateOffset toDate:selectedDay options:0];
+    unsigned unitFlags = NSYearCalendarUnit | NSMonthCalendarUnit |  NSDayCalendarUnit | NSWeekdayCalendarUnit;
+    NSDateComponents *dateComps = [curCalendar components:unitFlags fromDate:topDay];
+    [dateComps setHour:0];
+    [dateComps setMinute:0];
+    [dateComps setSecond:0];
+    topDay = [curCalendar dateFromComponents:dateComps];
+
 	
 	// Figure out what the beginning of today is
-    NSCalendar *curCalendar = [NSCalendar currentCalendar];
-    unsigned unitFlags = NSYearCalendarUnit | NSMonthCalendarUnit |  NSDayCalendarUnit | NSWeekdayCalendarUnit;
-    NSDateComponents *dateComps = [curCalendar components:unitFlags fromDate:today];
+    dateComps = [curCalendar components:unitFlags fromDate:today];
     [dateComps setHour:0];
     [dateComps setMinute:0];
     [dateComps setSecond:0];
@@ -546,7 +601,8 @@
 	}
     
     // Set up the key dates
-	NSDate *today = [[NSDate alloc] init]; 
+	NSDate *today = [[NSDate alloc] init];
+
     // Get the start of today
 	NSCalendar *curCalendar = [NSCalendar currentCalendar];
     unsigned unitFlags = NSYearCalendarUnit | NSMonthCalendarUnit |  NSDayCalendarUnit | NSWeekdayCalendarUnit;
@@ -555,11 +611,20 @@
     [dateComps setMinute:0];
     [dateComps setSecond:0];
     NSDate *startOfToday = [curCalendar dateFromComponents:dateComps];
-	
+    
 	// Now calculate the beginning of the past weeks 
-	NSTimeInterval secondsPerDay = 24 * 60 * 60;
     NSMutableArray *passedEntriesCopy = [passedEntries mutableCopy];
     NSDate *lastEntryFinish = [[NSDate alloc] init];
+    
+    // Set up selected day plus 1 day later
+    NSDateComponents *dateOffset = [[[NSDateComponents alloc] init] autorelease];
+    [dateOffset setDay:1];
+    NSDate *selectedDayPlusOne = [curCalendar dateByAddingComponents:dateOffset toDate:selectedDay options:0];
+    dateComps = [curCalendar components:unitFlags fromDate:selectedDayPlusOne];
+    [dateComps setHour:0];
+    [dateComps setMinute:0];
+    [dateComps setSecond:0];
+    selectedDayPlusOne = [curCalendar dateFromComponents:dateComps];
       
     if ([passedEntriesCopy count]) 
     {
@@ -573,7 +638,6 @@
             NSLog(@"Entry activity = %@", [[selectedEntry activity] name]);
             NSLog(@" ");
              */
-            //NSLog(@"This entry: %@ - %@", [selectedEntry startDate], [selectedEntry endDate]);
             if ([[selectedEntry startDate] timeIntervalSinceDate:lastEntryFinish] > 60) 
             {
                 /*
@@ -592,15 +656,36 @@
                 [newEntry setActivity:activity];
                 
                 if ([selectedDay compare:lastEntryFinish] == NSOrderedDescending)
+                {
                     [newEntry setStartDate:selectedDay];
+                }
                 else
+                {
                     [newEntry setStartDate:lastEntryFinish];
+                }
             
-                if ([[selectedEntry startDate] compare:[selectedDay dateByAddingTimeInterval:secondsPerDay]] == NSOrderedDescending) 
-                    [newEntry setEndDate:[selectedDay dateByAddingTimeInterval:secondsPerDay]];
+                if ([[selectedEntry startDate] compare:selectedDayPlusOne] == NSOrderedDescending)
+                {
+                    NSDateComponents *dateOffset = [[[NSDateComponents alloc] init] autorelease];
+                    [dateOffset setDay:1];
+                    NSDate *endDate = [curCalendar dateByAddingComponents:dateOffset toDate:selectedDay options:0];
+                    NSCalendar *curCalendar = [NSCalendar currentCalendar];
+                    unsigned unitFlags = NSYearCalendarUnit | NSMonthCalendarUnit |  NSDayCalendarUnit | NSWeekdayCalendarUnit;
+                    NSDateComponents *dateComps = [curCalendar components:unitFlags fromDate:endDate];
+                    [dateComps setHour:0];
+                    [dateComps setMinute:0];
+                    [dateComps setSecond:0];
+                    endDate = [curCalendar dateFromComponents:dateComps];
+                    
+                    [newEntry setEndDate:endDate];
+                    
+                }
                 else
+                {
                     [newEntry setEndDate:[selectedEntry startDate]];
                 //[miscEntries insertObject:newEntry atIndex:0];
+                }
+                
                 [miscEntries addObject:newEntry];
             } 
         
@@ -613,9 +698,8 @@
                     lastEntryFinish = [selectedEntry endDate]; 
             }
             else
-            {
                 lastEntryFinish = today;
-            }
+            
         }
         // Now do this last test to check if we need a Misc entry between right now and the
         // last completed activity
@@ -626,13 +710,7 @@
         if ([selectedDay compare:startOfToday] == NSOrderedSame) 
             lastComparison = today;
         else
-            lastComparison = [selectedDay dateByAddingTimeInterval:secondsPerDay];
-        
-        /*
-        NSLog(@"Last entry finish = %@", lastEntryFinish);
-        NSLog(@"Last comparison   = %@", lastComparison);
-        NSLog(@" ");
-        */
+            lastComparison = selectedDayPlusOne;
          
         if ([lastComparison timeIntervalSinceDate:lastEntryFinish] > 60) 
         {
@@ -642,10 +720,11 @@
             NSManagedObjectContext *context = [appDelegate managedObjectContext];
         
             Entry *newEntry = [NSEntityDescription insertNewObjectForEntityForName:@"Entry" inManagedObjectContext:context];
-            [newEntry setActivity:activity];        
-        
+            [newEntry setActivity:activity];     
+            
             [newEntry setStartDate:lastEntryFinish];
             [newEntry setEndDate:lastComparison];
+            
         
             // Add the new entry miscEntries array
             //[miscEntries insertObject:newEntry atIndex:0];
@@ -665,10 +744,28 @@
         [newEntry setActivity:activity];        
         
         [newEntry setStartDate:selectedDay];
+        NSDate *endDate;
         if ([selectedDay compare:startOfToday] == NSOrderedSame) 
-            [newEntry setEndDate:today];
+        {
+            endDate = today;
+            [newEntry setEndDate:endDate];
+        }
         else
-            [newEntry setEndDate:[selectedDay dateByAddingTimeInterval:secondsPerDay]];
+        {
+            NSDateComponents *dateOffset = [[[NSDateComponents alloc] init] autorelease];
+            [dateOffset setDay:1];
+            endDate = [curCalendar dateByAddingComponents:dateOffset toDate:selectedDay options:0];
+            NSCalendar *curCalendar = [NSCalendar currentCalendar];
+            unsigned unitFlags = NSYearCalendarUnit | NSMonthCalendarUnit |  NSDayCalendarUnit | NSWeekdayCalendarUnit;
+            NSDateComponents *dateComps = [curCalendar components:unitFlags fromDate:endDate];
+            [dateComps setHour:0];
+            [dateComps setMinute:0];
+            [dateComps setSecond:0];
+            endDate = [curCalendar dateFromComponents:dateComps];
+            
+            //endDate = [selectedDay dateByAddingTimeInterval:secondsPerDay];
+            [newEntry setEndDate:endDate];
+        }
         
         // Add the new entry miscEntries array
         //[miscEntries insertObject:newEntry atIndex:0];
@@ -730,18 +827,37 @@
 	[entryHours setTextColor:[UIColor blackColor]];
 	[entryMinutes setTextColor:[UIColor blackColor]];
 	
-	NSDateFormatter *date = [[[NSDateFormatter alloc] init] autorelease]; 
-	[date setDateFormat:@"EE, MM/dd"];
-	NSString *stringDate = [date stringFromDate:[entry startDate]];
+    
+    // Check what the GMT offsets are for the local timezone
+    // on the entry's start and end date
+    NSDate *startDate = [entry startDate];
+    NSDate *endDate = [entry endDate];
+    NSInteger startDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:startDate];
+    NSInteger endDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:endDate];
+    
+    
+    // Format and display the dates in the Entries rows
+	// Start Date Format
+    NSDateFormatter *stDate = [[[NSDateFormatter alloc] init] autorelease]; 
+	[stDate setDateFormat:@"EE, MM/dd"];
+    [stDate setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:startDateTimeZoneOffset]];
+	NSString *stringDate = [stDate stringFromDate:[entry startDate]];
 	[entryDate setText:stringDate];
-	[date setTimeStyle:NSDateFormatterShortStyle];
-	if ([entry endDate]) 
+	[stDate setTimeStyle:NSDateFormatterShortStyle];
+    
+    // End Date Format
+    NSDateFormatter *enDate = [[[NSDateFormatter alloc] init] autorelease]; 
+	[enDate setDateFormat:@"EE, MM/dd"];
+    [enDate setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:endDateTimeZoneOffset]];
+	[enDate setTimeStyle:NSDateFormatterShortStyle];
+    
+    if ([entry endDate]) 
 	{
-		stringDate = [NSString stringWithFormat:@"%@ - %@",[date stringFromDate:[entry startDate]],[date stringFromDate:[entry endDate]]];
+        stringDate = [NSString stringWithFormat:@"%@ - %@",[stDate stringFromDate:startDate],[enDate stringFromDate:endDate]];
 	}
 	else 
 	{
-		stringDate = [NSString stringWithFormat:@"%@...",[date stringFromDate:[entry startDate]]];
+        stringDate = [NSString stringWithFormat:@"%@...",[stDate stringFromDate:startDate]];
 		[entryHours setTextColor:[UIColor colorWithRed:0 green:.6 blue:.1 alpha:1]];
 		[entryMinutes setTextColor:[UIColor colorWithRed:0 green:.6 blue:.1 alpha:1]];
 	}
@@ -754,7 +870,8 @@
 	
 	// Get the amount of time spent doing the activity this week to display
 	NSMutableArray *timeData = [self timeSpentDoingEntry:entry];
-	NSNumber *hours = [timeData objectAtIndex:0];
+	// Orlando
+    NSNumber *hours = [timeData objectAtIndex:0];
 	NSNumber *minutes = [timeData objectAtIndex:1];
 	
 	if ([hours intValue]) 

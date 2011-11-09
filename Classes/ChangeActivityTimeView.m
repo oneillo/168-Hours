@@ -70,18 +70,40 @@
 	Activity *activity = [selectedEntry activity];
 	[activityTitle setTitle:[activity name] forState:UIControlStateNormal];
 	
-	NSDateFormatter *date = [[[NSDateFormatter alloc] init] autorelease]; 
-	[date setDateFormat:@"EEEE, MM/dd/YY"];
-	NSString *stringDate = [date stringFromDate:[selectedEntry startDate]];
+    
+	
+    // Check what the GMT offsets are for the local timezone
+    // on the entry's start and end date
+    NSDate *startDate = [selectedEntry startDate];
+    NSDate *endDate = [selectedEntry endDate];
+    NSInteger startDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:startDate];
+    NSInteger endDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:endDate];
+    
+    // Format and display the dates in the Entries rows
+	// Start Date Format
+    NSDateFormatter *stDate = [[[NSDateFormatter alloc] init] autorelease]; 
+	[stDate setDateFormat:@"EE, MM/dd"];
+    [stDate setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:startDateTimeZoneOffset]];
+	NSString *stringDate = [stDate stringFromDate:[selectedEntry startDate]];
 	[entryDate setText:stringDate];
-	[date setTimeStyle:NSDateFormatterShortStyle];
+	[stDate setTimeStyle:NSDateFormatterShortStyle];
+    
+    // End Date Format
+    NSDateFormatter *enDate = [[[NSDateFormatter alloc] init] autorelease]; 
+	[enDate setDateFormat:@"EE, MM/dd"];
+    [enDate setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:endDateTimeZoneOffset]];
+	[enDate setTimeStyle:NSDateFormatterShortStyle];
+
+    
     if ([selectedEntry endDate]) 
 	{
-		[entryStartTime setText:[NSString stringWithFormat:@"%@ - %@",[date stringFromDate:[selectedEntry startDate]],[date stringFromDate:[selectedEntry endDate]]]];
+		//[entryStartTime setText:[NSString stringWithFormat:@"%@ - %@",[date stringFromDate:[selectedEntry startDate]],[date stringFromDate:[selectedEntry endDate]]]];
+        [entryStartTime setText:[NSString stringWithFormat:@"%@ - %@",[stDate stringFromDate:startDate],[enDate stringFromDate:endDate]]];
 	}
 	else 
 	{
-		[entryStartTime setText:[NSString stringWithFormat:@"%@...",[date stringFromDate:[selectedEntry startDate]]]];	
+		//[entryStartTime setText:[NSString stringWithFormat:@"%@...",[date stringFromDate:[selectedEntry startDate]]]];	
+        [entryStartTime setText:[NSString stringWithFormat:@"%@...",[stDate stringFromDate:startDate]]];	
     }
 	
 	
@@ -198,8 +220,14 @@
 {
 	NSTimeInterval entryTime;
 	NSMutableArray *timedata = [[NSMutableArray alloc] init];
-	
+    
 	entryTime = [[entry endDate] timeIntervalSinceDate:[entry startDate]];
+    
+    // Add or subtract 1 hour to the time spent on the entry to make up for daylight savings time changes
+    NSInteger startDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:[entry startDate]];
+    NSInteger endDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:[entry endDate]];
+    NSTimeInterval offsetForDaylightSavings = endDateTimeZoneOffset - startDateTimeZoneOffset;
+    entryTime = entryTime + offsetForDaylightSavings;
 	
 	NSNumber *hours;
 	NSNumber *minutes;

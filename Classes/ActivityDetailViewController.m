@@ -98,7 +98,7 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
-	UIButton *renameButton = (UIButton *)[[self view] viewWithTag:1774];
+    UIButton *renameButton = (UIButton *)[[self view] viewWithTag:1774];
     [renameButton setHidden:0];
     
 	UITableView *tableView = (UITableView *)[[self view] viewWithTag:90];
@@ -217,14 +217,27 @@
 	{
 		NSLog(@"Some kind of error in timeSpentDoingActivity");
 	}
-	NSTimeInterval timeThatPassed = [today timeIntervalSinceDate:beginningOfWeekOne];
 	
+    // Orlando
+    // Fixed
+    NSTimeInterval timeThatPassed = [today timeIntervalSinceDate:beginningOfWeekOne];
+    NSInteger startDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:beginningOfWeekOne];
+    NSInteger endDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:today];
+    NSTimeInterval offsetForDaylightSavings = endDateTimeZoneOffset - startDateTimeZoneOffset;
+    timeThatPassed = timeThatPassed + offsetForDaylightSavings;
+    
 	// Now calculate the beginning of the past weeks 
 	NSTimeInterval secondsPerWeek = 7 * 24 * 60 * 60;
-	NSDate *beginningOfWeekTwo = [beginningOfWeekOne dateByAddingTimeInterval:-secondsPerWeek];
-	NSDate *beginningOfWeekThree = [beginningOfWeekTwo dateByAddingTimeInterval:-secondsPerWeek];
-	NSDate *beginningOfWeekFour = [beginningOfWeekThree dateByAddingTimeInterval:-secondsPerWeek];
+	//NSDate *beginningOfWeekTwo = [beginningOfWeekOne dateByAddingTimeInterval:-secondsPerWeek];
+	//NSDate *beginningOfWeekThree = [beginningOfWeekTwo dateByAddingTimeInterval:-secondsPerWeek];
+	//NSDate *beginningOfWeekFour = [beginningOfWeekThree dateByAddingTimeInterval:-secondsPerWeek];
+    NSDateComponents *dateOffset = [[[NSDateComponents alloc] init] autorelease];
+    [dateOffset setDay:-7];
+    NSDate *beginningOfWeekTwo = [curCalendar dateByAddingComponents:dateOffset toDate:beginningOfWeekOne options:0];
+    NSDate *beginningOfWeekThree = [curCalendar dateByAddingComponents:dateOffset toDate:beginningOfWeekTwo options:0];
+    NSDate *beginningOfWeekFour = [curCalendar dateByAddingComponents:dateOffset toDate:beginningOfWeekThree options:0]; 
 	
+    NSDate *startTime, *endTime;
 	// Now go through every entry and figure out where it goes
 	for (Entry *entry in entries) 
 	{
@@ -237,10 +250,14 @@
 				if ([[entry startDate] compare:beginningOfWeekOne] == NSOrderedDescending) 
 				{
 					entryTime = [[entry endDate] timeIntervalSinceDate:[entry startDate]];
+                    endTime = [entry endDate];
+                    startTime = [entry startDate];
 				}
 				else 
 				{
 					entryTime = [[entry endDate] timeIntervalSinceDate:beginningOfWeekOne];
+                    endTime = [entry endDate];
+                    startTime = beginningOfWeekOne;
 				}
 			}
 			else 
@@ -248,13 +265,25 @@
 				if ([[entry startDate] compare:beginningOfWeekOne] == NSOrderedDescending)
 				{
 					entryTime = [today timeIntervalSinceDate:[entry startDate]];
+                    endTime = today;
+                    startTime = [entry startDate];
 				}
 				else 
 				{
 					entryTime = [today timeIntervalSinceDate:beginningOfWeekOne];
+                    endTime = today;
+                    startTime = beginningOfWeekOne;
 				}
 			}
+            
+            // Fix any offset issues from daylight savings time
+            // on the time spent doing an activity
+            NSInteger startDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:startTime];
+            NSInteger endDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:endTime];
+            NSTimeInterval offsetForDaylightSavings = endDateTimeZoneOffset - startDateTimeZoneOffset;
+            
 			timeIntervalWeekOne += entryTime;
+            timeIntervalWeekOne += offsetForDaylightSavings;
 		}
 
 		 
@@ -268,22 +297,39 @@
 					if ([[entry endDate] compare:beginningOfWeekOne] == NSOrderedDescending) 
 					{
 						entryTime = [beginningOfWeekOne timeIntervalSinceDate:[entry startDate]];
+                        endTime = beginningOfWeekOne;
+                        startTime = [entry startDate];
 					}
 					else 
 					{
 						entryTime = [[entry endDate] timeIntervalSinceDate:[entry startDate]];
+                        endTime = [entry endDate];
+                        startTime = [entry startDate];
 					}
 				}
 				else 
 				{
 					entryTime = [[entry endDate] timeIntervalSinceDate:beginningOfWeekTwo];
+                    endTime = [entry endDate];
+                    startTime = beginningOfWeekTwo;
 				}
 			}
 			else 
 			{
 				entryTime = [beginningOfWeekOne timeIntervalSinceDate:[entry startDate]];
+                endTime = beginningOfWeekOne;
+                startTime = [entry startDate];
 			}
 			timeIntervalWeekTwo += entryTime;
+            
+            // Fix any offset issues from daylight savings time
+            // on the time spent doing an activity
+            NSInteger startDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:startTime];
+            NSInteger endDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:endTime];
+            NSTimeInterval offsetForDaylightSavings = endDateTimeZoneOffset - startDateTimeZoneOffset;
+            
+            timeIntervalWeekTwo += offsetForDaylightSavings;
+
 		}
 		
 		// Check week 3
@@ -294,19 +340,33 @@
 				if ([[entry startDate] compare:beginningOfWeekThree] == NSOrderedDescending) 
 				{
 					entryTime = [[entry endDate] timeIntervalSinceDate:[entry startDate]];
+                    endTime = [entry endDate];
+                    startTime = [entry startDate];
 				}
 				else 
 				{
 					entryTime = [[entry endDate] timeIntervalSinceDate:beginningOfWeekThree];
 					//entryTime = [beginningOfWeekOne timeIntervalSinceDate:[entry startDate]];
 					//timeIntervalWeekTwo += entryTime;
+                    endTime = [entry endDate];
+                    startTime = beginningOfWeekThree;
 				}
 			}
 			else 
 			{
 				entryTime = [beginningOfWeekTwo timeIntervalSinceDate:[entry startDate]];
+                endTime = beginningOfWeekTwo;
+                startTime = [entry startDate];
 			}
 			timeIntervalWeekThree += entryTime;
+            
+            // Fix any offset issues from daylight savings time
+            // on the time spent doing an activity
+            NSInteger startDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:startTime];
+            NSInteger endDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:endTime];
+            NSTimeInterval offsetForDaylightSavings = endDateTimeZoneOffset - startDateTimeZoneOffset;
+            
+            timeIntervalWeekThree += offsetForDaylightSavings;
 		}
 	
 		// Check week 4
@@ -317,19 +377,33 @@
 				if ([[entry startDate] compare:beginningOfWeekFour] == NSOrderedDescending) 
 				{
 					entryTime = [[entry endDate] timeIntervalSinceDate:[entry startDate]];
+                    endTime = [entry endDate];
+                    startTime = [entry startDate];
 				}
 				else 
 				{
 					entryTime = [[entry endDate] timeIntervalSinceDate:beginningOfWeekFour];
 					//entryTime = [beginningOfWeekOne timeIntervalSinceDate:[entry startDate]];
 					//timeIntervalWeekTwo += entryTime;
+                    endTime = [entry endDate];
+                    startTime = beginningOfWeekFour;
 				}
 			}
 			else 
 			{
 				entryTime = [beginningOfWeekThree timeIntervalSinceDate:[entry startDate]];
+                endTime = beginningOfWeekThree;
+                startTime = [entry startDate];
 			}
 			timeIntervalWeekFour += entryTime;
+            
+            // Fix any offset issues from daylight savings time
+            // on the time spent doing an activity
+            NSInteger startDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:startTime];
+            NSInteger endDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:endTime];
+            NSTimeInterval offsetForDaylightSavings = endDateTimeZoneOffset - startDateTimeZoneOffset;
+            
+            timeIntervalWeekFour += offsetForDaylightSavings;
 		}
 
 	}
@@ -365,7 +439,7 @@
 	
 	if ([[activity name] isEqualToString:@"Misc"]) 
 	{
-		//NSTimeInterval timeForWeekTwo = secondsPerWeek - timeIntervalWeekTwo;
+        //NSTimeInterval timeForWeekTwo = secondsPerWeek - timeIntervalWeekTwo;
         //hours = [NSNumber numberWithInt:168 - (int)((timeIntervalWeekTwo+30)/3600)];
 		timeIntervalWeekTwo = secondsPerWeek - timeIntervalWeekTwo;
         hours = [NSNumber numberWithInt:(int)(timeIntervalWeekTwo/3600)];
@@ -475,26 +549,69 @@
 	NSCalendar *curCalendar = [NSCalendar currentCalendar];
 	NSDate *topDate, *bottomDate;
 	NSDate *today = [[NSDate alloc] init]; 
+    
 	NSDate *beginningOfWeekOne = nil; 
 	BOOL ok = [curCalendar rangeOfUnit:NSWeekCalendarUnit startDate:&beginningOfWeekOne interval:NULL forDate:today];
 	if (!ok) 
 	{
-		NSLog(@"Some kine of error in setEntriesToShow");
+		NSLog(@"Some kind of error in setEntriesToShow");
 	}
     
+    
 	// Now calculate the beginning of the past weeks 
-	NSTimeInterval secondsPerWeek = 7 * 24 * 60 * 60;
+	//NSTimeInterval secondsPerWeek = 7 * 24 * 60 * 60;
     NSTimeInterval secondsInADay  = 24 * 60 * 60;
+    
+    // Orlando
+    NSDateComponents *dateOffset = [[[NSDateComponents alloc] init] autorelease];
+    int daysInWeek = 7;
 	
 	if (selectedWeek == 1) 
 	{
-		topDate = today;
-		bottomDate = beginningOfWeekOne;
+		//topDate = today;
+        // Orlando
+        [dateOffset setDay:daysInWeek];
+        topDate = [curCalendar dateByAddingComponents:dateOffset toDate:beginningOfWeekOne options:0];
+        unsigned unitFlags = NSYearCalendarUnit | NSMonthCalendarUnit |  NSDayCalendarUnit | NSWeekdayCalendarUnit;
+        NSDateComponents *dateComps = [curCalendar components:unitFlags fromDate:topDate];
+        [dateComps setHour:0];
+        [dateComps setMinute:0];
+        [dateComps setSecond:0];
+        topDate = [curCalendar dateFromComponents:dateComps];
+        
+		//bottomDate = beginningOfWeekOne;
+        
+        //Orlando
+        dateComps = [curCalendar components:unitFlags fromDate:beginningOfWeekOne];
+        [dateComps setHour:0];
+        [dateComps setMinute:0];
+        [dateComps setSecond:0];
+        bottomDate = [curCalendar dateFromComponents:dateComps];
+        
 	}
 	else 
 	{
-		topDate = [beginningOfWeekOne dateByAddingTimeInterval:-(selectedWeek - 2)*secondsPerWeek];
-		bottomDate = [beginningOfWeekOne dateByAddingTimeInterval:-(selectedWeek - 1)*secondsPerWeek];
+		//topDate = [beginningOfWeekOne dateByAddingTimeInterval:-(selectedWeek - 2)*secondsPerWeek];
+		//bottomDate = [beginningOfWeekOne dateByAddingTimeInterval:-(selectedWeek - 1)*secondsPerWeek];
+        
+        // Orlando
+        [dateOffset setDay:-daysInWeek*(selectedWeek - 2)];
+        topDate = [curCalendar dateByAddingComponents:dateOffset toDate:beginningOfWeekOne options:0];
+        unsigned unitFlags = NSYearCalendarUnit | NSMonthCalendarUnit |  NSDayCalendarUnit | NSWeekdayCalendarUnit;
+        NSDateComponents *dateComps = [curCalendar components:unitFlags fromDate:topDate];
+        [dateComps setHour:0];
+        [dateComps setMinute:0];
+        [dateComps setSecond:0];
+        topDate = [curCalendar dateFromComponents:dateComps];
+        
+        [dateOffset setDay:-daysInWeek*(selectedWeek - 1)];
+        bottomDate = [curCalendar dateByAddingComponents:dateOffset toDate:beginningOfWeekOne options:0];
+        dateComps = [curCalendar components:unitFlags fromDate:bottomDate];
+        [dateComps setHour:0];
+        [dateComps setMinute:0];
+        [dateComps setSecond:0];
+        bottomDate = [curCalendar dateFromComponents:dateComps];
+        
 	}
 	
     // First we get just the activities in this week
@@ -520,7 +637,7 @@
     NSDate *bottomDay, *topDay, *startTime, *endTime;
     
     for (Entry *entry in selectedEntries) 
-    {
+    {        
         NSDate *entryEnds;
         // This is to account for entries that are still running
         if (![entry endDate]) 
@@ -534,7 +651,15 @@
         
         for(int i=1; i < 8; i++)
         {
-            topDay = [bottomDay dateByAddingTimeInterval:secondsInADay];
+            [dateOffset setDay:1];
+            topDay = [curCalendar dateByAddingComponents:dateOffset toDate:bottomDay options:0];
+            unsigned unitFlags = NSYearCalendarUnit | NSMonthCalendarUnit |  NSDayCalendarUnit | NSWeekdayCalendarUnit;
+            NSDateComponents *dateComps = [curCalendar components:unitFlags fromDate:topDay];
+            [dateComps setHour:0];
+            [dateComps setMinute:0];
+            [dateComps setSecond:0];
+            topDay = [curCalendar dateFromComponents:dateComps];
+            
             
             if ([topDay compare:[entry startDate] ] == NSOrderedDescending && [bottomDay compare:entryEnds] != NSOrderedDescending) 
             {
@@ -554,39 +679,85 @@
             if (i == 1) 
             {
                 sundayTime += [endTime timeIntervalSinceDate:startTime];
+                // Fix any offset issues from daylight savings time
+                // on the time spent doing an activity
+                NSInteger startDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:startTime];
+                NSInteger endDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:endTime];
+                NSTimeInterval offsetForDaylightSavings = endDateTimeZoneOffset - startDateTimeZoneOffset;
+                sundayTime += offsetForDaylightSavings;
+                // Orlando - do this for all of the other ones below as well
+
             }
             else
             {
                 if (i == 2) 
                 {
                     mondayTime += [endTime timeIntervalSinceDate:startTime];
+                    // Fix any offset issues from daylight savings time
+                    // on the time spent doing an activity
+                    NSInteger startDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:startTime];
+                    NSInteger endDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:endTime];
+                    NSTimeInterval offsetForDaylightSavings = endDateTimeZoneOffset - startDateTimeZoneOffset;
+                    mondayTime += offsetForDaylightSavings;
                 }
                 else
                 {
                     if (i == 3) 
                     {
                         tuesdayTime += [endTime timeIntervalSinceDate:startTime];
+                        // Fix any offset issues from daylight savings time
+                        // on the time spent doing an activity
+                        NSInteger startDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:startTime];
+                        NSInteger endDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:endTime];
+                        NSTimeInterval offsetForDaylightSavings = endDateTimeZoneOffset - startDateTimeZoneOffset;
+                        tuesdayTime += offsetForDaylightSavings;
                     }
                     else
                     {
                         if (i == 4) 
                         {
                             wednesdayTime += [endTime timeIntervalSinceDate:startTime];
+                            // Fix any offset issues from daylight savings time
+                            // on the time spent doing an activity
+                            NSInteger startDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:startTime];
+                            NSInteger endDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:endTime];
+                            NSTimeInterval offsetForDaylightSavings = endDateTimeZoneOffset - startDateTimeZoneOffset;
+                            wednesdayTime += offsetForDaylightSavings;
                         }
                         else
                         {
                             if (i == 5) 
                             {
                                 thursdayTime += [endTime timeIntervalSinceDate:startTime];
+                                // Fix any offset issues from daylight savings time
+                                // on the time spent doing an activity
+                                NSInteger startDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:startTime];
+                                NSInteger endDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:endTime];
+                                NSTimeInterval offsetForDaylightSavings = endDateTimeZoneOffset - startDateTimeZoneOffset;
+                                thursdayTime += offsetForDaylightSavings;
                             }
                             else
                             {
                                 if (i == 6) 
                                 {
                                     fridayTime += [endTime timeIntervalSinceDate:startTime];
+                                    // Fix any offset issues from daylight savings time
+                                    // on the time spent doing an activity
+                                    NSInteger startDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:startTime];
+                                    NSInteger endDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:endTime];
+                                    NSTimeInterval offsetForDaylightSavings = endDateTimeZoneOffset - startDateTimeZoneOffset;
+                                    fridayTime += offsetForDaylightSavings;
                                 }
                                 else
+                                {
                                     saturdayTime += [endTime timeIntervalSinceDate:startTime];
+                                    // Fix any offset issues from daylight savings time
+                                    // on the time spent doing an activity
+                                    NSInteger startDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:startTime];
+                                    NSInteger endDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:endTime];
+                                    NSTimeInterval offsetForDaylightSavings = endDateTimeZoneOffset - startDateTimeZoneOffset;
+                                    saturdayTime += offsetForDaylightSavings;
+                                }
                             }
                         }
                     }
@@ -594,7 +765,12 @@
             }
                 
             }
-            bottomDay = [bottomDay dateByAddingTimeInterval:secondsInADay];
+            bottomDay = [curCalendar dateByAddingComponents:dateOffset toDate:bottomDay options:0];
+            dateComps = [curCalendar components:unitFlags fromDate:bottomDay];
+            [dateComps setHour:0];
+            [dateComps setMinute:0];
+            [dateComps setSecond:0];
+            bottomDay = [curCalendar dateFromComponents:dateComps];
             
         }
     }
@@ -616,7 +792,8 @@
     // adds the name of the day to the day entry
     //stringDate = [date stringFromDate:bottomDate];    
     //NSTimeInterval timeThatPassed = [today timeIntervalSinceDate:beginningOfWeekOne];
-    
+
+    // Orlando
     if ([[activity name] isEqualToString:@"Misc"]) 
 	{
         if ([today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedDescending || [today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedAscending) 
@@ -624,14 +801,27 @@
             if ([today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedAscending) 
             {
                 NSTimeInterval timeThatPassedToday = [today timeIntervalSinceDate:bottomDate];
+                // Check if there is a GMT offset delta from daylight savings time
+                // And correct it if necessary
+                
+                NSInteger startDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:bottomDate];
+                NSInteger endDateTimeZoneOffset = [[NSTimeZone localTimeZone] secondsFromGMTForDate:today];
+                NSTimeInterval offsetForDaylightSavings = endDateTimeZoneOffset - startDateTimeZoneOffset;
+                timeThatPassedToday = timeThatPassedToday + offsetForDaylightSavings;
+                
                 sundayTime = timeThatPassedToday - sundayTime;
             }
             else
             {
                 sundayTime = secondsInADay - sundayTime;
             }
+            // Orlando
+            //NSLog(@"This entry: %@ - %@", [entry startDate],[entry endDate]);
+            //NSLog(@" ");
+            
             hours = [NSNumber numberWithInt:(int)(sundayTime/3600)];
             min = (sundayTime - ([hours intValue] * 3600))/60;
+            
             //min %= 60;
             minutes = [NSNumber numberWithInt:min];
         }
@@ -667,7 +857,18 @@
     // Monday
     // This block puts the day names in the array
     // adds the name of the day to the day entry
-    bottomDate = [bottomDate dateByAddingTimeInterval:secondsInADay];
+    //bottomDate = [bottomDate dateByAddingTimeInterval:secondsInADay];
+    
+    // Orlando
+    [dateOffset setDay:1];
+    bottomDate = [curCalendar dateByAddingComponents:dateOffset toDate:bottomDate options:0];
+    unsigned unitFlags = NSYearCalendarUnit | NSMonthCalendarUnit |  NSDayCalendarUnit | NSWeekdayCalendarUnit;
+    NSDateComponents *dateComps = [curCalendar components:unitFlags fromDate:bottomDate];
+    [dateComps setHour:0];
+    [dateComps setMinute:0];
+    [dateComps setSecond:0];
+    bottomDate = [curCalendar dateFromComponents:dateComps];
+    
     
     if ([[activity name] isEqualToString:@"Misc"]) 
 	{
@@ -701,7 +902,7 @@
 	}
     
     if (mondayTime !=0) 
-    {
+    {        
         [dayEntry addObject:bottomDate];
         [dayEntry addObject:hours];
         [dayEntry addObject:minutes];
@@ -718,7 +919,16 @@
     // Tuesday
     // This block puts the day names in the array
     // adds the name of the day to the day entry
-    bottomDate = [bottomDate dateByAddingTimeInterval:secondsInADay];
+    //bottomDate = [bottomDate dateByAddingTimeInterval:secondsInADay];
+    
+    // Orlando
+    [dateOffset setDay:1];
+    bottomDate = [curCalendar dateByAddingComponents:dateOffset toDate:bottomDate options:0];
+    dateComps = [curCalendar components:unitFlags fromDate:bottomDate];
+    [dateComps setHour:0];
+    [dateComps setMinute:0];
+    [dateComps setSecond:0];
+    bottomDate = [curCalendar dateFromComponents:dateComps];
     
     if ([[activity name] isEqualToString:@"Misc"]) 
 	{
@@ -769,7 +979,16 @@
     // Wednesday
     // This block puts the day names in the array
     // adds the name of the day to the day entry
-    bottomDate = [bottomDate dateByAddingTimeInterval:secondsInADay];
+    //bottomDate = [bottomDate dateByAddingTimeInterval:secondsInADay];
+    
+    // Orlando
+    [dateOffset setDay:1];
+    bottomDate = [curCalendar dateByAddingComponents:dateOffset toDate:bottomDate options:0];
+    dateComps = [curCalendar components:unitFlags fromDate:bottomDate];
+    [dateComps setHour:0];
+    [dateComps setMinute:0];
+    [dateComps setSecond:0];
+    bottomDate = [curCalendar dateFromComponents:dateComps];
     
     if ([[activity name] isEqualToString:@"Misc"]) 
 	{
@@ -820,7 +1039,17 @@
     // Thursday
     // This block puts the day names in the array
     // adds the name of the day to the day entry
-    bottomDate = [bottomDate dateByAddingTimeInterval:secondsInADay];
+    // bottomDate = [bottomDate dateByAddingTimeInterval:secondsInADay];
+    
+    // Orlando
+    [dateOffset setDay:1];
+    bottomDate = [curCalendar dateByAddingComponents:dateOffset toDate:bottomDate options:0];
+    dateComps = [curCalendar components:unitFlags fromDate:bottomDate];
+    [dateComps setHour:0];
+    [dateComps setMinute:0];
+    [dateComps setSecond:0];
+    bottomDate = [curCalendar dateFromComponents:dateComps];
+
     
     if ([[activity name] isEqualToString:@"Misc"]) 
 	{
@@ -871,7 +1100,16 @@
     // Friday
     // This block puts the day names in the array
     // adds the name of the day to the day entry
-    bottomDate = [bottomDate dateByAddingTimeInterval:secondsInADay];
+    // bottomDate = [bottomDate dateByAddingTimeInterval:secondsInADay];
+    
+    // Orlando
+    [dateOffset setDay:1];
+    bottomDate = [curCalendar dateByAddingComponents:dateOffset toDate:bottomDate options:0];
+    dateComps = [curCalendar components:unitFlags fromDate:bottomDate];
+    [dateComps setHour:0];
+    [dateComps setMinute:0];
+    [dateComps setSecond:0];
+    bottomDate = [curCalendar dateFromComponents:dateComps];
     
     if ([[activity name] isEqualToString:@"Misc"]) 
 	{
@@ -922,7 +1160,17 @@
     // Saturday
     // This block puts the day names in the array
     // adds the name of the day to the day entry
-    bottomDate = [bottomDate dateByAddingTimeInterval:secondsInADay];
+    //bottomDate = [bottomDate dateByAddingTimeInterval:secondsInADay];
+    
+    // Orlando
+    [dateOffset setDay:1];
+    bottomDate = [curCalendar dateByAddingComponents:dateOffset toDate:bottomDate options:0];
+    dateComps = [curCalendar components:unitFlags fromDate:bottomDate];
+    [dateComps setHour:0];
+    [dateComps setMinute:0];
+    [dateComps setSecond:0];
+    bottomDate = [curCalendar dateFromComponents:dateComps];
+
     
     if ([[activity name] isEqualToString:@"Misc"]) 
 	{
@@ -1023,21 +1271,41 @@
 	}
 	
 	// Now calculate the beginning of the past weeks 
-	NSTimeInterval secondsPerWeek = 7 * 24 * 60 * 60;
-    NSTimeInterval secondsInADay = 24 * 60 * 60;
+	//NSTimeInterval secondsPerWeek = 7 * 24 * 60 * 60;
+    //NSTimeInterval secondsInADay = 24 * 60 * 60;
+    NSDateComponents *dateOffset = [[[NSDateComponents alloc] init] autorelease];
+    int daysInWeek = 7;
 	
 	if (selectedWeek == 1) 
 	{
-		topDate = [beginningOfWeekOne dateByAddingTimeInterval:secondsPerWeek];
+		//topDate = [beginningOfWeekOne dateByAddingTimeInterval:secondsPerWeek];
+        [dateOffset setDay:daysInWeek];
+        topDate = [curCalendar dateByAddingComponents:dateOffset toDate:beginningOfWeekOne options:0];
+        NSCalendar *curCalendar = [NSCalendar currentCalendar];
+        unsigned unitFlags = NSYearCalendarUnit | NSMonthCalendarUnit |  NSDayCalendarUnit | NSWeekdayCalendarUnit;
+        NSDateComponents *dateComps = [curCalendar components:unitFlags fromDate:topDate];
+        [dateComps setHour:0];
+        [dateComps setMinute:0];
+        [dateComps setSecond:0];
+        topDate = [curCalendar dateFromComponents:dateComps];
+        
 		bottomDate = beginningOfWeekOne;
 	}
 	else 
 	{
-		topDate = [beginningOfWeekOne dateByAddingTimeInterval:-(selectedWeek - 2)*secondsPerWeek];
-		bottomDate = [beginningOfWeekOne dateByAddingTimeInterval:-(selectedWeek - 1)*secondsPerWeek];
+		//topDate = [beginningOfWeekOne dateByAddingTimeInterval:-(selectedWeek - 2)*secondsPerWeek];
+        [dateOffset setDay:-daysInWeek*(selectedWeek - 2)];
+        topDate = [curCalendar dateByAddingComponents:dateOffset toDate:beginningOfWeekOne options:0];
+        
+        
+		//bottomDate = [beginningOfWeekOne dateByAddingTimeInterval:-(selectedWeek - 1)*secondsPerWeek];
+        [dateOffset setDay:-daysInWeek*(selectedWeek - 1)];
+        bottomDate = [curCalendar dateByAddingComponents:dateOffset toDate:beginningOfWeekOne options:0];
 	}
     
-    topDate = [topDate dateByAddingTimeInterval:-secondsInADay];
+    //topDate = [topDate dateByAddingTimeInterval:-secondsInADay];
+    [dateOffset setDay:-1];
+    topDate = [curCalendar dateByAddingComponents:dateOffset toDate:topDate options:0];
     NSDateFormatter *date = [[[NSDateFormatter alloc] init] autorelease]; 
 	[date setDateFormat:@"MM/dd/yy"];
 	NSString *stringDateTop = [date stringFromDate:topDate];
@@ -1106,6 +1374,7 @@
     [dateComps setMinute:0];
     [dateComps setSecond:0];
     NSDate *startOfToday = [curCalendar dateFromComponents:dateComps];
+
     
     NSDateFormatter *date = [[[NSDateFormatter alloc] init] autorelease]; 
 	[date setDateFormat:@"EE, MM/dd"];
@@ -1114,7 +1383,7 @@
         [entryDate setTextColor:[UIColor orangeColor]];
     [entryDate setText:[date stringFromDate:rowDay]];
 	    
-	// Set the time spend doing the activity each day
+	// Set the time spent doing the activity each day
 	NSNumber *hours = [entry objectAtIndex:1];
 	NSNumber *minutes = [entry objectAtIndex:2];
 	
