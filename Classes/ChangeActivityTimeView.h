@@ -38,7 +38,7 @@
 	
 }
 @property (nonatomic, retain) Entry *selectedEntry;
-@property (nonatomic, copy) Activity *newActivityForEntry;
+@property (nonatomic, copy) Activity *aNewActivityForEntry;
 @property (nonatomic) NSTimeInterval newEntryTime;
 
 

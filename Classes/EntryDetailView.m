@@ -118,7 +118,7 @@
         
         // If the user changed the entry time and it isn't a MISC entry, then make it so
         //if (newEntryTime != (float)0 && ![changeActivityTimeView newActivityForEntry]) 
-        if (newEntryTime != (float)0 && ![[activity name] isEqualToString:@"Misc"] && [[[changeActivityTimeView newActivityForEntry] name] isEqualToString:[activity name]])
+        if (newEntryTime != (float)0 && ![[activity name] isEqualToString:@"Misc"] && [[[changeActivityTimeView aNewActivityForEntry] name] isEqualToString:[activity name]])
 		{
             NSDate *newEndDate = [NSDate dateWithTimeInterval:newEntryTime sinceDate:[selectedEntry startDate]];
 			[selectedEntry setEndDate:newEndDate];
@@ -137,14 +137,14 @@
         // If there is a value for newActivityForEntry
         // And it isn't equal to Misc, so it has been changed,
         // Then recategorize this slice of time under the new activity
-        if ([changeActivityTimeView newActivityForEntry] && ![[[changeActivityTimeView newActivityForEntry] name] isEqualToString:[activity name]]) 
+        if ([changeActivityTimeView aNewActivityForEntry] && ![[[changeActivityTimeView aNewActivityForEntry] name] isEqualToString:[activity name]]) 
         {
             if (newEntryTime != (float)0) 
             {
                 NSDate *newEndDate = [NSDate dateWithTimeInterval:newEntryTime sinceDate:[selectedEntry startDate]];
                 [selectedEntry setEndDate:newEndDate];
             }
-            [selectedEntry setActivity:[changeActivityTimeView newActivityForEntry]];
+            [selectedEntry setActivity:[changeActivityTimeView aNewActivityForEntry]];
             
             [appDelegate saveContext];
 			
@@ -310,7 +310,7 @@
     NSDate *startDate, *endDate;
 	// Check against selected week
 	//if ([topDate compare:[entry startDate]] == NSOrderedDescending && ([[entry startDate] compare:bottomDate] == NSOrderedDescending || [[entry endDate] compare:bottomDate] == NSOrderedDescending) || (![entry endDate] && selectedWeek == 1))
-    if ([topDay compare:[entry startDate]] == NSOrderedDescending && ([[entry startDate] compare:selectedDay] == NSOrderedDescending || [[entry endDate] compare:selectedDay] == NSOrderedDescending) || (![entry endDate] && [selectedDay compare:startOfToday] == NSOrderedSame))
+    if (([topDay compare:[entry startDate]] == NSOrderedDescending && ([[entry startDate] compare:selectedDay] == NSOrderedDescending || [[entry endDate] compare:selectedDay] == NSOrderedDescending)) || (![entry endDate] && [selectedDay compare:startOfToday] == NSOrderedSame))
 	{        
         if ([entry endDate]) 
 		{
@@ -517,7 +517,7 @@
         {
             // Check against selected day
             //if ([topDate compare:[entry startDate]] == NSOrderedDescending && ([[entry startDate] compare:bottomDate] == NSOrderedDescending || [[entry endDate] compare:bottomDate] == NSOrderedDescending) || (![entry endDate] && selectedWeek == 1))
-            if ([topDay compare:[entry startDate]] == NSOrderedDescending && ([[entry startDate] compare:selectedDay] == NSOrderedDescending || [[entry endDate] compare:selectedDay] == NSOrderedDescending) || (![entry endDate] && [selectedDay compare:startOfToday] == NSOrderedSame))
+            if (([topDay compare:[entry startDate]] == NSOrderedDescending && ([[entry startDate] compare:selectedDay] == NSOrderedDescending || [[entry endDate] compare:selectedDay] == NSOrderedDescending)) || (![entry endDate] && [selectedDay compare:startOfToday] == NSOrderedSame))
             {
                 [tempEntryList addObject:entry];
             }
@@ -529,7 +529,7 @@
         {
             // Check against selected week
             //if ([topDate compare:[entry startDate]] == NSOrderedDescending && ([[entry startDate] compare:bottomDate] == NSOrderedDescending || [[entry endDate] compare:bottomDate] == NSOrderedDescending) || (![entry endDate] && selectedWeek == 1))
-            if ([topDay compare:[entry startDate]] == NSOrderedDescending && ([[entry startDate] compare:selectedDay] == NSOrderedDescending || [[entry endDate] compare:selectedDay] == NSOrderedDescending) || (![entry endDate] && [selectedDay compare:startOfToday] == NSOrderedSame))
+            if (([topDay compare:[entry startDate]] == NSOrderedDescending && ([[entry startDate] compare:selectedDay] == NSOrderedDescending || [[entry endDate] compare:selectedDay] == NSOrderedDescending)) || (![entry endDate] && [selectedDay compare:startOfToday] == NSOrderedSame))
             {
                 [tempEntryList addObject:entry];
             }

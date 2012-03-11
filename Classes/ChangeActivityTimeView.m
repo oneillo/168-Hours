@@ -26,7 +26,7 @@
 
 @implementation ChangeActivityTimeView
 
-@synthesize selectedEntry, newEntryTime, newActivityForEntry;
+@synthesize selectedEntry, newEntryTime, aNewActivityForEntry;
 
 #pragma mark -
 #pragma mark Init Methods
@@ -162,7 +162,7 @@
 	NSInteger newMinutes;
 	NSMutableArray *timeData = [self timeSpentDoingEntry:selectedEntry];
 	
-    newActivityForEntry = [activityOptions objectAtIndex:[durationPickerView selectedRowInComponent:0]];
+    aNewActivityForEntry = [activityOptions objectAtIndex:[durationPickerView selectedRowInComponent:0]];
         
     newHours = [durationPickerView selectedRowInComponent:1];
     if (newHours == 168) 

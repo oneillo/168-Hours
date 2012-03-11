@@ -618,7 +618,7 @@
     for (Entry *entry in entries)
     {
 		// Check against selected week
-        if ([topDate compare:[entry startDate]] == NSOrderedDescending && ([[entry startDate] compare:bottomDate] == NSOrderedDescending || [[entry endDate] compare:bottomDate] == NSOrderedDescending) || (![entry endDate] && selectedWeek == 1))
+        if (([topDate compare:[entry startDate]] == NSOrderedDescending && ([[entry startDate] compare:bottomDate] == NSOrderedDescending || [[entry endDate] compare:bottomDate] == NSOrderedDescending)) || (![entry endDate] && selectedWeek == 1))
         {
             [tempEntryList addObject:entry];
         }
@@ -796,7 +796,7 @@
     // Orlando
     if ([[activity name] isEqualToString:@"Misc"]) 
 	{
-        if ([today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedDescending || [today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedAscending) 
+        if (([today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedDescending) || ([today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedAscending)) 
         {
             if ([today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedAscending) 
             {
@@ -872,7 +872,7 @@
     
     if ([[activity name] isEqualToString:@"Misc"]) 
 	{
-        if ([today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedDescending || [today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedAscending)  
+        if (([today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedDescending) || ([today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedAscending))  
         {
             if ([today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedAscending) 
             {
@@ -932,7 +932,7 @@
     
     if ([[activity name] isEqualToString:@"Misc"]) 
 	{
-        if ([today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedDescending || [today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedAscending)  
+        if (([today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedDescending) || ([today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedAscending))  
         {
             if ([today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedAscending) 
             {
@@ -992,7 +992,7 @@
     
     if ([[activity name] isEqualToString:@"Misc"]) 
 	{
-        if ([today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedDescending || [today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedAscending)  
+        if (([today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedDescending) || ([today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedAscending))  
         {
             if ([today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedAscending) 
             {
@@ -1053,7 +1053,7 @@
     
     if ([[activity name] isEqualToString:@"Misc"]) 
 	{
-        if ([today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedDescending || [today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedAscending)  
+        if (([today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedDescending) || ([today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedAscending))  
         {
             if ([today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedAscending) 
             {
@@ -1113,7 +1113,7 @@
     
     if ([[activity name] isEqualToString:@"Misc"]) 
 	{
-        if ([today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedDescending || [today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedAscending)  
+        if (([today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedDescending) || ([today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedAscending))  
         {
             if ([today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedAscending) 
             {
@@ -1174,7 +1174,7 @@
     
     if ([[activity name] isEqualToString:@"Misc"]) 
 	{
-        if ([today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedDescending || [today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedAscending)  
+        if (([today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedDescending) || ([today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedAscending))  
         {
             if ([today compare:bottomDate] == NSOrderedDescending && [today compare:[bottomDate dateByAddingTimeInterval:secondsInADay]] == NSOrderedAscending) 
             {

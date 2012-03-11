@@ -67,7 +67,7 @@ static ActivityViewController *sharedInstance;
 	
     // Delete the General DB object
     // This object holds just 1 value: activityRunning, which is 1 if there is an activity running
-     [appDelegate deleteAllObjects:@"General"];
+    // [appDelegate deleteAllObjects:@"General"];
 	
     // Get the activities from the persistent store and populate activities
     NSArray *fetchedActivities = [appDelegate allInstancesOf:@"Activity"];		
@@ -772,7 +772,7 @@ static ActivityViewController *sharedInstance;
 	{
 		// Check against selected week
 		// orlando - 02/06 changed for inter-week bug seen
-		if ([today compare:[ent startDate]] == NSOrderedDescending && ([[ent startDate] compare:beginningOfPeriod] == NSOrderedDescending || [[ent endDate] compare:beginningOfPeriod] == NSOrderedDescending) || ![ent endDate])
+		if (([today compare:[ent startDate]] == NSOrderedDescending) && (([[ent startDate] compare:beginningOfPeriod] == NSOrderedDescending || [[ent endDate] compare:beginningOfPeriod] == NSOrderedDescending) || ![ent endDate]))
 		{
 			if ([ent endDate]) 
 			{
